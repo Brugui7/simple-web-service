@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/constants.php';
 header('Content-Type: application/json; charset=utf-8');
 
 $params = [];
@@ -41,10 +42,13 @@ $params['temperatura'] = round($params['temperatura']);
 try {
 
     $pdo = new PDO(
-        'mysql:dbname=test;host=127.0.0.1',
-        'user1',
-        '123',
-        [PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+        'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST,
+        DB_USER,
+        DB_PASSWORD,
+        [
+            PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+        ]
     );
 
     $query = $pdo->prepare('INSERT INTO users (nombre, apellidos, temperatura, `format`, ciudad, provincia) VALUES

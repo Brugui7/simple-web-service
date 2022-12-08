@@ -17,6 +17,12 @@ if (empty($user) || empty($password)) {
         "error" => "No se han recibido todos los parámetros requeridos.",
         "credentials" => false
     ];
+} else if ($user !== 'admin' || $password !== 'admin') {
+    $response = [
+        "success" => false,
+        "error" => "Credenciales incorrectas",
+        "credentials" => false
+    ];
 }
 
 echo json_encode($response);

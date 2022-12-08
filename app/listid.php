@@ -3,6 +3,17 @@ require_once __DIR__ . '/constants.php';
 header('Content-Type: application/json; charset=utf-8');
 
 try {
+    $id = $_GET['id'] ?? null;
+
+    if (empty($id) || is_numeric($id) === false || $id < 0) {
+        echo json_encode([
+            "success" => false,
+            "error" => 'ID inválido',
+            "temp" => null
+        ]);
+        die;
+    }
+
     $pdo = new PDO(
         'mysql:dbname=' . DB_NAME . ';host=' . DB_HOST,
         DB_USER,
@@ -13,13 +24,16 @@ try {
         ]
     );
 
-    $query = $pdo->query("SELECT * from users");
+    $query = $pdo->prepare("SELECT * from users WHERE id = :id");
+    $query->bindParam(':id', $id);
+    $query->execute();
     $results = $query->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode([
         "success" => true,
         "error" => null,
         "temp" => $results
     ]);
+
 } catch (PDOException $e) {
     echo json_encode([
         "success" => false,
